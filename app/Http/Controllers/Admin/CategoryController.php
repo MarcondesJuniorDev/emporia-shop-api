@@ -7,6 +7,7 @@ use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -24,6 +25,8 @@ class CategoryController extends Controller
             'name' => $validated['name'],
             'slug' => Str::slug($validated['name']),
         ]);
+
+        Cache::forget('public_categories');
 
         return (new CategoryResource($category))
             ->response()
@@ -44,6 +47,8 @@ class CategoryController extends Controller
             'slug' => Str::slug($validated['name']),
         ]);
 
+        Cache::forget('public_categories');
+
         return new CategoryResource($category);
     }
 
@@ -53,6 +58,8 @@ class CategoryController extends Controller
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();
+
+        Cache::forget('public_categories');
 
         return response()->json([
             'message' => 'Categoria excluída com sucesso.',

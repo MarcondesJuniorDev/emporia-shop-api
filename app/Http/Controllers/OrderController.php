@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
@@ -103,6 +104,8 @@ class OrderController extends Controller
 
             return $order;
         });
+
+        event(new OrderPlaced($order));
 
         return (new OrderResource($order->load('items.product')))
             ->response()

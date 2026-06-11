@@ -8,6 +8,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -43,7 +44,9 @@ class ProductController extends Controller
      */
     public function categories(): AnonymousResourceCollection
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Cache::remember('public_categories', now()->addDay(), function () {
+            return Category::orderBy('name')->get();
+        });
 
         return CategoryResource::collection($categories);
     }
