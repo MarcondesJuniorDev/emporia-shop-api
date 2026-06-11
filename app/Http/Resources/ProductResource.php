@@ -22,7 +22,7 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'price_formatted' => 'R$ '.number_format($this->price, 2, ',', '.'),
             'stock' => $this->stock,
-            'image' => $this->image_path ? asset('storage/'.$this->image_path) : null,
+            'image' => $this->image_path ? (filter_var($this->image_path, FILTER_VALIDATE_URL) ? $this->image_path : asset('storage/'.$this->image_path)) : null,
             'is_active' => $this->is_active,
             'category' => [
                 'id' => $this->category->id,
