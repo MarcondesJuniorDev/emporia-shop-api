@@ -14,6 +14,10 @@ Route::get('/categories', [ProductController::class, 'categories']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Middleware\EnsureUserIsAdmin;
+
 // Protected auth and order routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -22,4 +26,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
+});
+
+// Protected admin routes
+Route::middleware(['auth:sanctum', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
+    // Categories Admin CRUD
+    Route::post('/categories', [AdminCategoryController::class, 'store']);
+    Route::put('/categories/{category}', [AdminCategoryController::class, 'update']);
+    Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy']);
+
+    // Products Admin CRUD
+    Route::post('/products', [AdminProductController::class, 'store']);
+    Route::put('/products/{product}', [AdminProductController::class, 'update']);
+    Route::delete('/products/{product}', [AdminProductController::class, 'destroy']);
 });
