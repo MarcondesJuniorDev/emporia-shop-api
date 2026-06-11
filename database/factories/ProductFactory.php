@@ -28,7 +28,7 @@ class ProductFactory extends Factory
             'description' => fake()->paragraph(3),
             'price' => fake()->randomFloat(2, 19, 2999),
             'stock' => fake()->numberBetween(0, 150),
-            'image_path' => 'products/'.fake()->unique()->numberBetween(1, 100).'.jpg',
+            'image_path' => 'products/'.fake()->numberBetween(1, 1000).'.jpg',
             'is_active' => fake()->boolean(90),
         ];
     }
